@@ -42,8 +42,8 @@ def format_count_network_status(counter: dict) -> str:
 
     for field in counter_fields:
         count_network_status += f"# HELP {field['name']} {field['description']}\n" \
-                               f"# TYPE {field['name']} {field['type']}\n" \
-                               f"{field['name']} {counter[field['counter_key']]}\n"
+                                f"# TYPE {field['name']} {field['type']}\n" \
+                                f"{field['name']} {counter[field['counter_key']]}\n"
 
     return count_network_status
 
@@ -109,8 +109,20 @@ def get_info_about_my_validator(my_validator: dict) -> str:
     return my_validator_info
 
 
+def get_supply_info(supply_response: dict) -> str:
+    supply_info = f"# HELP total_supply Total supply in network\n" \
+                  f"# TYPE total_supply gauge\n" \
+                  f"total_supply {supply_response['amount']['amount']}\n"
+    return supply_info
+
+
 def get_additional_info() -> str:
-    response = requests.get(url=f"http://127.0.0.1:{RPC_API_PORT}/cosmos/staking/v1beta1/validators?pagination.limit=999999999999999999")
+    response = requests.get(url=f"http://127.0.0.1:{RPC_API_PORT}/cosmos/bank/v1beta1/supply/aphoton")
+
+    supply_info = get_supply_info(response.json())
+
+    response = requests.get(
+        url=f"http://127.0.0.1:{RPC_API_PORT}/cosmos/staking/v1beta1/validators?pagination.limit=999999999999999999")
 
     content = response.json()
 
@@ -124,5 +136,5 @@ def get_additional_info() -> str:
 
     my_validator_info = get_info_about_my_validator(my_validator)
 
-    info = count_network_status + my_validator_info
+    info = supply_info + count_network_status + my_validator_info
     return info

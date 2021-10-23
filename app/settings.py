@@ -1,0 +1,7 @@
+import os
+
+MASTER_SERVER_IP = os.getenv("MASTER_SERVER_IP")
+PROMETHEUS_METRICS_PORT = os.getenv("PROMETHEUS_METRICS_PORT")
+RPC_API_PORT = os.getenv("RPC_API_PORT")
+MONIKER = os.getenv("MONIKER")
+

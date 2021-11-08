@@ -56,7 +56,8 @@ def get_top_number_validator(validators_response: dict, moniker: str) -> int:
         if moniker == validator['description']['moniker']:
             return counter
 
-        counter += 1
+        if validator['status'] == "BOND_STATUS_BONDED":
+            counter += 1
 
 
 def get_my_validator(validators_response: dict):
